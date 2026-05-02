@@ -1,88 +1,57 @@
-# 🚀 LifeFlow AI — Development TODOs
+# LifeFlow AI
 
-## 🟢 Phase 1: Foundation (MVP)
+LifeFlow AI is an experimental decision support system that uses large language models and agent-based reasoning to help users evaluate choices, simulate future outcomes, and produce a reasoned recommendation.
 
-### Backend Setup
-- [ ] Initialize project (Python + FastAPI)
-- [ ] Create virtual environment
-- [ ] Install dependencies (fastapi, uvicorn, openai, pydantic)
-- [ ] Setup folder structure
+## What this project is
 
-### LLM Integration
-- [ ] Add OpenAI API key support
-- [ ] Create base LLM wrapper
+LifeFlow AI is built around a multi-agent architecture that transforms a question or decision prompt into:
+- simulated future scenarios,
+- a debate between varied reasoning voices,
+- a judged recommendation informed by the dialogue and memory.
 
-### Agents
-- [ ] Implement Planner Agent
-- [ ] Implement Judge Agent
+The goal is to help users make better decisions by letting the system explore multiple paths, compare outcomes, and explain its reasoning.
 
-### API
-- [ ] Create POST /decide endpoint
-- [ ] Connect agents to API
+## Core features
 
----
+- **Decision intake**: Accepts user questions or decisions through an API endpoint.
+- **Simulation engine**: Generates multiple possible future scenarios for each option.
+- **Agent debate**: Uses multiple agent personalities (optimist, pessimist, realist, judge) to examine tradeoffs.
+- **Memory support**: Stores past decisions and preferences so future recommendations can be personalized.
+- **Structured output**: Returns JSON with alternatives, scenario summaries, debate logs, and a final recommendation.
 
-## 🟡 Phase 2: Simulation Engine
+## Architecture overview
 
-- [ ] Implement Simulation Agent
-- [ ] Generate 3–5 future paths
-- [ ] Add scoring logic for each path
-- [ ] Return structured JSON response
+- **Backend**: Python + FastAPI
+- **LLM integration**: OpenAI-compatible model access through a wrapper layer
+- **Agents**:
+  - Planner Agent: proposes alternatives and decision steps
+  - Simulation Agent: creates potential future outcomes
+  - Debate Agents: analyze options from different perspectives
+  - Judge Agent: synthesizes findings into a recommendation
+- **Memory**: optional vector store for historical decisions and preference context
+- **Frontend**: planned React + Tailwind UI for interactive decision exploration
 
----
+## Why this project exists
 
-## 🔵 Phase 3: Debate System
+Many decisions feel uncertain because the future is hard to imagine and different perspectives are missing. LifeFlow AI aims to make uncertainty more tangible by using AI to generate multiple futures, compare them, and explain the reasoning behind its choice.
 
-- [ ] Implement Optimist Agent
-- [ ] Implement Pessimist Agent
-- [ ] Implement Realist Agent
-- [ ] Create debate loop (multi-round)
-- [ ] Store debate logs
-- [ ] Feed debate to Judge Agent
+## Getting started
 
----
+1. Create a Python virtual environment
+2. Install backend dependencies
+3. Configure your OpenAI API key
+4. Run the FastAPI app
 
-## 🟣 Phase 4: Memory
+A simple `POST /decide` endpoint is planned to receive input and return decision support output.
 
-- [ ] Setup vector DB (FAISS / Chroma)
-- [ ] Store past decisions
-- [ ] Retrieve relevant preferences
-- [ ] Inject memory into prompts
+## Future direction
 
----
+Potential improvements include:
+- a richer user interface,
+- stronger personalization with memory,
+- advanced scoring models,
+- deployment to cloud platforms for easy access.
 
-## 🟠 Phase 5: Frontend
+## Project status
 
-- [ ] Setup React + Tailwind
-- [ ] Create input UI
-- [ ] Display:
-  - simulated futures
-  - debate logs
-  - final recommendation
-
----
-
-## 🔴 Phase 6: Advanced
-
-- [ ] Add ML scoring model (scikit-learn)
-- [ ] Add Bayesian reasoning (optional)
-- [ ] Improve personalization
-
----
-
-## ⚫ Phase 7: Deployment
-
-- [ ] Deploy backend (Render / AWS)
-- [ ] Deploy frontend (Vercel)
-- [ ] Add logging
-- [ ] Write README + architecture diagram
-
----
-
-## ✅ Definition of Done
-
-- [ ] User inputs decision
-- [ ] System generates futures
-- [ ] Agents debate
-- [ ] Final recommendation generated
-- [ ] System remembers user (optional)
+This repository is currently focused on building the backend decision engine and agent orchestration layer. The frontend and full deployment are next-stage goals.
