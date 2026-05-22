@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from dotenv import load_dotenv
 from app.models import DecideRequest, ScenarioSummary, DecideResponse
+from app.agents.planner import run_planner
 
 load_dotenv()
 
@@ -12,24 +13,16 @@ def root():
 
 @app.post("/decide", response_model = DecideResponse)
 def decide(request: DecideRequest):
-
+    try:
+        alternatives = run_planner(request.question,request.context)
+    except Exception as e:
+        raise HTTPException(status_code = 500, detail = f"planner agent failed: {str(e)}")
+    
     return DecideResponse(
-        alternatives = [
-            f"Option A for: {request.question}",
-            f"Option B for: {request.question}",
-            f"Option C for: {request.question}"
-        ],
-        scenarios = [
-            ScenarioSummary(option="Option A", outcome = "Things go well", risk_level="low"),
-            ScenarioSummary(option="Option B", outcome = "Mixed Results", risk_level="medium"),
-            ScenarioSummary(option="Option C", outcome = "High reward, High risk", risk_level="high"),
-        ],
-        debate_log = [
-            "Optimist: Option A looks promising",
-            "Pessimist: Option C looks too risky",
-            "Realist: Option B is the safe bet" 
-        ],
-        recommendation = "Option B",
-        reasoning = "Stub reasoning - judge agent not yet connected.",
-        
+        alternatives = alternatives,
+        scenarios = [ScenarioSummary(option = alt, outcome = "coming soon", risk_level="medium")
+        for alt in alternatives],
+        debate_log = ["Debate agent is not yet connected"],
+        recommendation = "coming soon",
+        reasoning = "Judge agent not yet connected.",
     )
