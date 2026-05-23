@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from dotenv import load_dotenv
 from app.models import DecideRequest, ScenarioSummary, DecideResponse
 from app.agents.planner import run_planner
+from app.agents.simulator import run_simulator
 
 load_dotenv()
 
@@ -18,11 +19,15 @@ def decide(request: DecideRequest):
     except Exception as e:
         raise HTTPException(status_code = 500, detail = f"planner agent failed: {str(e)}")
     
+    try:
+        scenarios = run_simulator(alternatives,request.context)
+    except Exception as e:
+        raise HTTPException(status_code = 500, detail = f"simulator agent failed: {str(e)}")
+    
     return DecideResponse(
         alternatives = alternatives,
-        scenarios = [ScenarioSummary(option = alt, outcome = "coming soon", risk_level="medium")
-        for alt in alternatives],
+        scenarios = scenarios,
         debate_log = ["Debate agent is not yet connected"],
         recommendation = "coming soon",
-        reasoning = "Judge agent not yet connected.",
+        reasoning = "Judge agent not yet connected"
     )
