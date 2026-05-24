@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from app.models import DecideRequest, ScenarioSummary, DecideResponse
 from app.agents.planner import run_planner
 from app.agents.simulator import run_simulator
+from app.agents.debate import run_debate
+from app.agents.judge import run_judge
 
 load_dotenv()
 
@@ -24,10 +26,20 @@ def decide(request: DecideRequest):
     except Exception as e:
         raise HTTPException(status_code = 500, detail = f"simulator agent failed: {str(e)}")
     
+    try:
+        debate_log = run_debate(scenarios,request.context)
+    except Exception as e:
+        raise HTTPException(status_code = 500, detail = f"debate agent failed: {str(e)}")
+    
+    try:
+        verdict = run_judge(scenarios,debate_log,request.context)
+    except Exception as e:
+        raise HTTPException(f"Judge agent failed: {str(e)}")
+    
     return DecideResponse(
         alternatives = alternatives,
         scenarios = scenarios,
-        debate_log = ["Debate agent is not yet connected"],
-        recommendation = "coming soon",
-        reasoning = "Judge agent not yet connected"
+        debate_log = debate_log,
+        recommendation = verdict['recommendation'],
+        reasoning = verdict["reasoning"]
     )
