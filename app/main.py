@@ -5,6 +5,7 @@ from app.agents.planner import run_planner
 from app.agents.simulator import run_simulator
 from app.agents.debate import run_debate
 from app.agents.judge import run_judge
+from app.memory.store import save_decision
 
 load_dotenv()
 
@@ -36,10 +37,20 @@ def decide(request: DecideRequest):
     except Exception as e:
         raise HTTPException(f"Judge agent failed: {str(e)}")
     
-    return DecideResponse(
+    response = DecideResponse(
         alternatives = alternatives,
         scenarios = scenarios,
         debate_log = debate_log,
         recommendation = verdict['recommendation'],
         reasoning = verdict["reasoning"]
     )
+
+    save_decision(
+        decision_id = response.decision_id,
+        user_id = request.user_id,
+        question = request.question,
+        recommendation = verdict["recommendation"],
+        reasoning = verdict["reasoning"]
+    )
+
+    return response

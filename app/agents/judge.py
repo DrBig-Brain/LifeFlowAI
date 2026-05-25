@@ -34,6 +34,7 @@ def run_judge(
         scenarios: list[ScenarioSummary],
         debate_log: list[str],
         context: str | None = None,
+        past_decisions: list[dict]= [],
 ) -> dict:
     scenarios_text = "\n".join([
         f"-Option: {s.option}\nOutcome: {s.outcome}\nRisk:{s.risk_level}"
@@ -46,6 +47,13 @@ def run_judge(
     if context:
         user_message += f"\nContext:\n{context}"
 
+    if past_decisions:
+        past_text = "\n".join([
+            f"- Q: {p['question']} -> Recommendation: {p['recommendation']}"
+            for p in past_decisions
+        ])
+        user_message += f"\n\nPast decisions by this user:\n{past_text}"
+        
     message = [
         SystemMessage(content=JUDGE_SYSTEM_PROMPT),
         HumanMessage(content=user_message)
